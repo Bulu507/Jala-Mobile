@@ -4,11 +4,13 @@ import {BottomSheet} from '@rneui/themed';
 import {colors} from '../../../../utils';
 import {ListSize, WINDOW_HEIGHT} from '../../../../parameters';
 import {Text} from '../../../../components';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setFilterShrimPrice} from '../../../../config';
+import {isEqual} from 'lodash';
 
 export default function FilterSize(props) {
   const dispatch = useDispatch();
+  const {size} = useSelector((x) => x.filterShrimpPrice);
 
   const setForm = (value) => {
     dispatch(setFilterShrimPrice('size', value));
@@ -34,10 +36,12 @@ export default function FilterSize(props) {
         </View>
         <ScrollView contentContainerStyle={styles.scrollView}>
           {ListSize.map((item) => {
+            let onFocused = isEqual(item, size);
             return (
               <ListItem
                 key={item}
                 value={item}
+                onFocused={onFocused}
                 onPress={() => handleOnPress(item)}
               />
             );
@@ -48,10 +52,14 @@ export default function FilterSize(props) {
   );
 }
 
-const ListItem = ({value, onPress}) => {
+const ListItem = ({value, onPress, onFocused}) => {
+  const textColor = onFocused ? colors?.text.white : colors.text.default;
+  const fontWeight = onFocused ? 'bold' : null;
   return (
-    <TouchableOpacity style={styles.itemBox} onPress={onPress}>
-      <Text size={15}>{value}</Text>
+    <TouchableOpacity style={styles.itemBox(onFocused)} onPress={onPress}>
+      <Text size={15} color={textColor} type={fontWeight}>
+        {value}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -73,5 +81,9 @@ const styles = StyleSheet.create({
   scrollView: {
     flexGrow: 1,
   },
-  itemBox: {paddingHorizontal: 20, paddingBottom: 20},
+  itemBox: (onFocused) => ({
+    padding: 15,
+    backgroundColor: onFocused ? colors.backdrop.blue1 : null,
+    justifyContent: 'center',
+  }),
 });

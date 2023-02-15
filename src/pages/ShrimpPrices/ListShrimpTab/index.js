@@ -1,11 +1,12 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import {TabView} from '@rneui/themed';
-import {FilterSize, FloatingFilter} from '../CustomComponent';
+import {FilterRegion, FilterSize, FloatingFilter} from '../CustomComponent';
 import {ListSize} from '../../../parameters';
 
 export default function ListShrimpTab() {
   const [showFilterSize, setShowFilterSize] = useState(false);
+  const [showFilterRegion, setShowFilterRegion] = useState(false);
 
   return (
     <>
@@ -13,11 +14,15 @@ export default function ListShrimpTab() {
         isVisible={showFilterSize}
         close={() => setShowFilterSize(false)}
       />
+      <FilterRegion
+        isVisible={showFilterRegion}
+        close={() => setShowFilterRegion(false)}
+      />
       <TabView.Item style={styles.container}>
         <View style={styles.content}>
           <FloatingFilter
             onSizePress={() => setShowFilterSize(true)}
-            onLocationPress={() => {}}
+            onLocationPress={() => setShowFilterRegion(true)}
           />
           <Text>ListShrimpPage</Text>
         </View>
